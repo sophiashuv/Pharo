@@ -1,0 +1,368 @@
+"
+*
+*                      ЛАБОРАТОРНА РОБОТА 1
+*                        
+*                  Тема: ОБ'ЄКТИ ТА ПОВІДОМЛЕННЯ
+*
+*  Завдання до лабораторної роботи:
+*     1. Виконайте наведені нижче приклади та завдання,
+*          збережіть отримані результати.
+*     2. Запропонуйте власні приклади до кожної частини роботи.
+*     3. Сформулюйте висновки щодо виконаної роботи.
+*
+===================================================================
+
+
+{ Виокремте кожен з наведених нижче об'єктів і виконайте <Print it> }
+{ Результат виконання збережіть поруч з об'єктом, поясніть його.   }
+{ Після цього кожному об'єктові надішліть повідомлення class, щоб довідатися, }
+{ екземпляром якого класу він є. Отримані імена класів також збережіть. }
+
+ ------ ОБ'ЄКТИ:
+
+    * літерали
+" 
+    20 . "20 class. SmallInteger | Magnitude >> Number >> Integer >> SmallInteger"
+    2432902008176640000 . "2432902008176640000 class. LargePositiveInteger | Magnitude >> Number >> Integer >> LargeInteger >> LargePositiveInteger"
+    3.14159265 . "3.14159265 class. SmallFloat64 | Magnitude >> Number >> Float >> SmallFloat64"
+    $A . "$A class. Character"
+    'What is your name?' . "'What is your name?' class. ByteString | String >> ByteString"
+    #(1 2 3 4) . "#(1 2 3 4) class. Array"
+    #aNewFace . "#aNewFace class. ByteSymbol | String >> Symbol >> ByteSymbol"
+    [ 1000 ] . "[ 1000 ] class. FullBlockClosure | BlockClosure >> FullBlockClosure"
+		
+		
+	 #[123 21 255] . "#[123 21 255] class .  ByteArray"
+	 1@2 .  "(1@2) Object subclass: #Point"
+	 3/2. "(3/2) Number subclass: #Fraction |  Magnitude >> Number >> Fraction"
+	 10 seconds. "0:00:00:10
+	 				 10 seconds class. Duration"
+					
+"    * псевдозмінні
+"
+    true . "true class. True | ProtoObject >> Object >> Boolean >> True"
+    false . "false class. False | ProtoObject >> Object >> Boolean >> False"
+    nil . "nil class. UndefinedObject"
+  
+"    * глобальні об'єкти
+"
+    Transcript . "Transcript class. ThreadSafeTranscript"
+    Display . "DisplayScreen(0x0x32)  
+					Display class. DisplayScreen"
+    Smalltalk . "Smalltalk class. SmalltalkImage"
+    Magnitude .  "Magnitude class. Magnitude class"
+    DiskStore . "DiskStore class. DiskStore class"
+
+    Processor. "Processor class.  ProcessorScheduler"
+    SourceFiles. "a SourceFileArray
+					  SourceFiles class.  SourceFileArray"
+    SystemOrganization. "a SystemOrganizer
+							   SystemOrganization class. SystemOrganizer"
+"
+{ Довідайтеся, екземпляром якого класу є кожен з наведених вище об'єктів, }
+{ за допомогою надсилання повідомлення class. Наприклад, 20 class <Ctrl+p>}
+{ За допомогою браузера класів знайдіть кожен згаданий клас в ієрархії,   }
+{ знайдіть у вікні браузера перелік методів класу та екземпляра,          }
+{ перегляньте код деяких методів за власним вибором.                      }
+{ Браузер можна викликати з меню Tools, або програмно <Ctrl+d> такий рядок }
+{       Smalltalk tools browser openOnClass: Integer     <--потрібний клас }
+{ Або виокремити ім'я класу і натиснути <Ctrl+b>                          }
+
+---------------------------------------------------------------------------
+
+{ Виокремте кожен з наведених нижче рядків коду і виконайте <Print it>   }
+{ Результати виконання збережіть. За допомогою браузера класів знайдіть }
+{ код методу, що опрацював повідомлення, з'ясуйте, що він виконує.      }
+{ Запропонуйте власні приклади різноманітних повідомлень.               }
+
+ ------ УНАРНІ ПОВІДОМЛЕННЯ
+"
+    #( 'array' 'of' 'strings' ) size. "3"
+    'now is the time' asUppercase. "'NOW IS THE TIME'"
+    'hello there' reversed. "'ereht olleh'"
+    #( 4 'five' 6 7 ) reversed. "#(7 6 'five' 4)"
+    $A asciiValue. "65"
+    65 asCharacter. "$A"
+    #(1 2 0 0 1 1 1) asSet. "a Set(0 1 2)"
+    [ 1000 ] value .  "1000"                                    
+    'Hello, WORLD!' yourself. "'Hello, WORLD!'"
+    #(1 2 3) printString. "'#(1 2 3)'"
+
+	 89 sin "0.8600694058124533"
+	 3 sqrt "1.7320508075688772"
+	 'Sophia' size "6"
+	 true not "false"
+	 1 negated ." -1"
+	 0.5 reciprocal ." 2.0 (обернений)"
+    1.9 rounded ." 2"
+	 '72' asNumber ." 72"
+" ------ БІНАРНІ ПОВІДОМЛЕННЯ"
+
+    3 + 4 . "7"
+    5 * 7 . "35"
+    5 // 2 ." 2"
+    4 \\ 3 ." 1"
+    2 / 6 ." (1/3)"
+    3 + 4 * 2 ." 14"
+    3 + ( 4 * 2 )." 11"
+    1.5 + 6.3e2 ." 631.5"
+
+    'hello', ' there'." 'hello there'"
+    #(1 2 3), #(4 5 6)." #(1 2 3 4 5 6)  (A comma is also a binary message to concatenate strings.)"
+
+    2 > 3 ." false"
+    #(1 2) = #(1 2)." true"
+    1.0 = 1 ." true (return true if the receiver is equal to the argument. Fail if the argument is not a Float.)"
+    1.0 == 1 ." false (two equal Fractions are not the same object)"
+
+	 5 % 3. "2"
+	 true | false . " true"
+	 true & false ." false"
+	 'abc' ~= 'abc' . "false (Answers whether the String literals 'abc 'and 'abc' have different values)"
+	 
+
+" ------ КЛЮЧОВІ ПОВІДОМЛЕННЯ "
+
+    #( 1 3 5 7 ) at: 1 ." 1 (Element by index)"
+    #((1 0) (0 1)) at: 2 ." #(0 1)"
+    (#((1 0) (0 1)) at: 2) at: 1 .  " 0"
+    24 gcd: 30 ." 6"
+    2.01 raisedToInteger: 10 ." 1076.3674952097679 (power)"
+   (String withAll: 'hello') at: 1 put: $H; yourself ." 'Hello'"
+
+    'The quick brown fox' copyFrom: 4 to: 9 . " ' quick'"
+    'a sample string' deepCopy replaceFrom: 3 to: 8 with: 'NICEST' . " 'a NICEST string'"
+
+	 12 quo: 5." 2"
+	 12 rem: 7." 5"
+	 5 bitAnd: 2." 0"
+	 5 bitOr: 2." 7"
+	 'abc' collect: [:char | char asUppercase]." 'ABC'"
+	 #(1 2 3 4 5) select: [:n | n odd]." #(1 3 5)"
+	
+" ------ ВКЛАДЕНІ ПОВІДОМЛЕННЯ "
+
+    20 factorial printString size ." 19"
+												"20 factorial. 2432902008176640000"
+												"2432902008176640000 printString.  '2432902008176640000'"
+												"'2432902008176640000' size. 19"
+    'hello' size + 4 ." 9"
+							"'hello' size. 5"
+							"5 + 4. 9"
+
+    'now' size + #( 1 2 3 4 ) size ." 7"
+												"'now' size. 3"
+												"#( 1 2 3 4 ) size . 4"
+												"3 + 4. 7"
+
+    #(4 8 8 4 4 2) occurrencesOf: 4 * 2 . "2"
+													"4 * 2. 8"
+													"#(4 8 8 4 4 2) occurrencesOf: 8.  2"
+
+    (#(4 8 8 4 4 2) occurrencesOf: 4) * 2 ." 6"
+														"#(4 8 8 4 4 2) occurrencesOf: 4. 3"
+														"3 * 2. 6"
+
+    #( 1 12 24 36) includes: 4 factorial ." true"
+														" 4 factorial. 24"
+														"#( 1 12 24 36) includes: 24. true"
+
+    4 factorial between: 3 + 4 and: 'hello' size * 7 ." true"
+																	  "4 factorial. 24"
+																	  " 3 + 4. 7"
+																	  "'hello' size. 5 "
+																	  "5 * 7. 35"
+																	  "24 between: 7 and: 35. true"
+
+    'hello' at: ( #( 5 3 1 ) at: 2 ) ." $l"
+													"( #( 5 3 1 ) at: 2 ). 3"
+													"'hello' at: 3. $l"
+													
+	('H' , 'eleven' copyFrom: 1 to: 3) , ('moloko' copyFrom: 3 to: 7 - 3).    "'Hello' "
+																									"'H' , 'eleven'. 'Heleven'"
+																									"'Heleven' copyFrom: 1 to: 3. 'Hel'"
+																									"7 - 3. 4"
+																									"('moloko' copyFrom: 3 to: 4). 'lo'"
+																									"'Hel','lo' 'Hello' "
+	
+																									 
+	
+	(#( 65 3 5 7 ) at: 1) == $A asciiValue." true"
+											"(#( 65 3 5 7 ) at: 1).  65"
+											"$A asciiValue. 65"
+											"65 == 65. true"
+"
+{ Поясніть порядок виконання виразів, наведених вище. Пояснення проілюструйте }
+{ проміжними результатами. Запропонуйте власні осмислені приклади суперпозиції}
+{ повідомлень. }
+
+-------------------------------------------------------------------------------
+
+{ Виконайте по одному наступні рядки коду, довідайтеся, екземплярами яких }
+{ класів є отримані результати. } 
+
+ ------ ПОВІДОМЛЕННЯ, ЩО СТВОРЮЮТЬ НОВІ ОБ'ЄКТИ
+"
+    1 / 3 . "(1/3) class. Fraction | Magnitude >> Number >> Fraction"
+    2 / 6 . "(1/3) class. Fraction | Magnitude >> Number >> Fraction"
+    10 @ 10 . "(10@10) class. Point"
+    1 to: 5 . "(1 to: 5) class. Interval"
+    0 @ 0 corner: 50 @ 20 . "(0@0) corner: (50@20) #Rectangle"
+    Set new . "a Set()"
+"
+ ------ ПОСЛІДОВНОСТІ ПОВІДОМЛЕНЬ, КАСКАДНІ ПОВІДОМЛЕННЯ
+                                                  
+{ Виконайте наступні фрагменти як нероздільні блоки за допомогою <Print it> }
+"
+    "| a |" "тимчасова змінна. Playground дозволяє не оголошувати її"
+    a := Set new.
+    a add: 1. a add: 5. a add: -6. a add: 1.
+    a add: 1. a add: $W. a add: #(1 1).
+    a add: 'Good!'. a. "a Set(5 1 -6 #(1 1) 'Good!' $W)"
+
+ "--- *" 
+    Set new add: 1; add: 5; add: -6; add: 1;
+            add: 1; add: $W; add: #(1 1); add:'Good!'; yourself. "a Set(5 1 -6 #(1 1) 'Good!' $W)"
+
+"{ Виконайте наступні фрагменти як нероздільні блоки за допомогою <Do It> }"
+ canvas := FormCanvas extent: 300@300.
+ canvas fillOval: (0@0 corner: 300@300) color: Color lightOrange borderWidth: 1 borderColor: Color black.
+ canvas fillOval: (Rectangle origin: 70@100 extent: 40@40) color: Color white borderWidth: 1 borderColor: Color black.
+ canvas fillOval: (Rectangle origin: 190@100 extent: 40@40) color: Color white borderWidth: 1 borderColor: Color black.
+ canvas drawPolygon: {70@200 . 230@200 . 150@230} color: Color white borderWidth: 1 borderColor: Color black. 
+ morph := canvas form asMorph.
+ morph openInWorld .
+
+ "--- *"
+    morph delete.
+ "--- *"
+ 
+ canvas := FormCanvas extent: 300@300.
+ canvas
+   fillOval: (0@0 corner: 300@300)
+      color: Color lightOrange borderWidth: 1 borderColor: Color black;
+   fillOval: (Rectangle origin: 70@100 extent: 40@40) 
+      color: Color white borderWidth: 1 borderColor: Color black;
+   fillOval: (Rectangle origin: 190@100 extent: 40@40)
+      color: Color white borderWidth: 1 borderColor: Color black;
+   drawPolygon: {70@200 . 230@200 . 150@230}
+      color: Color white borderWidth: 1 borderColor: Color black. 
+ morph := canvas form asMorph.
+ morph openInWorld .
+
+"---------------------------------------------------------------------------
+
+{ Відшукайте та виправте помилки в наступних прикладах.              }                   
+{ А які помилки трапилися Вам під час виконання лабораторної роботи? }"
+
+    '20' asInteger factorial." 2432902008176640000"
+    (#((1 2) (3 4)) at:1) at:1 ." 1"
+    'hello' at: (#( 5 3 1 ) at: 2 )." $l"
+
+"----------------------------------------------------------------------------
+{ Виконайте за допомогою <Do It> }
+
+ ------     ВИКОРИСТАННЯ ДЕКІЛЬКОХ ВІКОН
+*"
+    Transcript open.
+    Transcript show: (3 + 4) printString .
+"*"
+    Transcript show: 'Hello,'; tab; show: 'World'; cr;
+                       show: 'What''s new?'; cr.
+"*"
+    Transcript show: 
+        (UIManager default request: 'How are you?' initialAnswer: 'I''m fine!'); cr.
+
+"Наступний приклад виконайте за допомогою <Print it>."
+         UIManager default
+               chooseFrom: #(123 78 Infinity 56 65 '7x8')
+               lines: #(2 4) message: '7 multiply by 8 is equal to ...'." 5"
+"*" 
+    AboutDialogWindow new open." an AboutDialogWindow(164874752) named: About"    "Спробуйте відкрити вікно About поточної системи, доступне через головне меню"             
+"*"
+    UIManager default inform: 'Congratulation! You are the best!!!'." a MorphicUIManager"
+"*"
+    UIManager default confirm:'Don''t forget to save your image!' label:'Last message'. " true"
+"*"
+    "Виконайте як нероздільний блок за допомогою <Do It>"
+    joe := Morph new color: Color blue.
+    joe openInWorld.
+    bill := Morph new color: Color red .
+    bill openInWorld.
+"*"
+    joe position: (joe position + (10@3)). 
+"*"
+    joe position: (joe position + (10@15)); extent: (joe extent * 1.5).
+"*"
+    joe color: Color orange.
+"*"
+    joe color: (Color orange alpha: 0.5).
+"*"
+    bill position: (joe position + (100@0)).
+"*"
+    joe delete. bill delete.
+
+"Якщо Вас зацікавили можливості системи, додайте власні приклади.
+ Чи змогли б Ви запрограмувати невелике опитування? Після завершення
+ опитування - виведення веселенької графіки."
+
+emoji := UIManager default
+               chooseFrom: #('Heppy' 'Sed' 'Angry')
+               lines: #(1 3) message: 'Choose Emoji'. 
+ (emoji == 1)
+        ifTrue: [
+				 canvas := FormCanvas extent: 300@300.
+ 					canvas
+   						fillOval: (0@0 corner: 300@300)
+      						color: Color lightOrange borderWidth: 1 borderColor: Color black;
+   						fillOval: (Rectangle origin: 70@100 extent: 40@40) 
+      						color: Color lightBlue  borderWidth: 1 borderColor: Color black;
+   						fillOval: (Rectangle origin: 190@100 extent: 40@40)
+     						color: Color lightBlue borderWidth: 1 borderColor: Color black;
+   						drawPolygon: {70@200 . 230@200 . 150@230}
+      						color: Color white borderWidth: 1 borderColor: Color black. 
+ 						morph := canvas form asMorph.
+ 					morph openInWorld .
+					
+						].
+ (emoji == 2)
+			ifTrue: [
+				 canvas := FormCanvas extent: 300@300.
+ 					canvas
+   						fillOval: (0@0 corner: 300@300)
+      						color: Color lightOrange borderWidth: 1 borderColor: Color black;
+   						fillOval: (Rectangle origin: 70@100 extent: 40@40) 
+      						color: Color lightBlue borderWidth: 1 borderColor: Color black;
+   						fillOval: (Rectangle origin: 190@100 extent: 40@40)
+     						color: Color lightBlue borderWidth: 1 borderColor: Color black;
+   						drawPolygon: {70@230 . 230@230 . 150@200}
+      						color: Color white borderWidth: 1 borderColor: Color black. 
+ 						morph := canvas form asMorph.
+ 					morph openInWorld .
+					
+						].
+(emoji == 3)
+			ifTrue: [
+				 canvas := FormCanvas extent: 300@300.
+ 					canvas
+   						fillOval: (0@0 corner: 300@300)
+      						color: Color red borderWidth: 1 borderColor: Color black;
+   						fillOval: (Rectangle origin: 70@100 extent: 40@40) 
+      						color: Color lightBlue borderWidth: 1 borderColor: Color black;
+   						fillOval: (Rectangle origin: 190@100 extent: 40@40)
+     						color: Color lightBlue borderWidth: 1 borderColor: Color black;
+   						drawPolygon: {70@210 . 230@210 . 230@200. 70@200}
+      						color: Color white borderWidth: 1 borderColor: Color black. 
+ 						morph := canvas form asMorph.
+ 					morph openInWorld .
+						] .
+					
+"--- *"
+    morph delete.
+"--- *"
+
+					
+
+
+
+

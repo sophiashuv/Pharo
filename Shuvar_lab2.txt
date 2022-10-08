@@ -1,0 +1,436 @@
+"*
+*                      ЛАБОРАТОРНА РОБОТА 2
+*
+*                   Тема: СТРУКТУРИ КЕРУВАННЯ
+*
+*  Завдання до лабораторної роботи:
+*     1. Випробуйте наведені нижче приклади, збережіть отримані результати.
+*     2. Виконайте запропоновані завдання, прокоментуйте їхнє виконання.
+*     3. Сформулюйте висновки щодо структур керування Smalltalk.
+*
+=============================================================================="
+
+
+" ------ ПОРІВНЯННЯ ОБ'ЄКТІВ"
+
+"{ Виокремте кожен з наведених нижче рядів коду і виконайте <Print it> }"
+
+    3 < 4 . true
+    #(1 2 3 4) = #(1 2 3 4). true
+    #(1 2 3 4) == #(1 2 3 4). true
+    (#(1 2 3 4)at:2) == (#(1 2 3 4)at:2). true
+    'hello' <= 'goodbye'. false
+	 'hello' >= 'goodbye'. true
+    5 = (2 + 3). true 
+    20 factorial between:1e16 and:1e20 . true
+    (2@12)<(100@120). true
+	 (2@130)<(100@120). false
+    $a isUppercase. false 
+    ('hello' at: 1) isVowel. false
+    7 odd. true
+
+    56 = (7 * 8) true
+    ('Bye!' at:2) isVowel. false
+
+	-1 arcCos closeTo: 3.1415926. true.
+	3.14 closeTo: 3.1415926  precision: 0.001. true
+	$A sameAs: $a.  true
+	#'lulu' = 'lulu'. true
+	'lulu' = #'lulu'. true
+	'lulu' = #'kulu'. false
+	
+"{ Які ще об'єкти можна порівнювати? Яким чином? Знайдіть відповідні методи }
+{ за допомогою SystemBrowser'а. Наведіть приклади використання.             }
+
+
+ ------ ТЕСТУВАННЯ ОБ'ЄКТІВ
+
+{ Отримайте результати для наведених рядків коду. Запропонуйте власні приклади. }"
+
+    Smalltalk class. SmalltalkImage
+    Boolean superclass. Object
+    20 isKindOf: Number. true
+    20 isMemberOf: SmallInteger. true
+    20 factorial isMemberOf: SmallInteger. false
+    Number inheritsFrom: Magnitude. true
+    Number respondsTo: #new. true
+    20 respondsTo: #max:. true
+    3/5 respondsTo: #+. true
+    $A respondsTo: #between:and:. true
+
+	1 isKindOf: SmallInteger. true
+	1 isKindOf: Integer. true
+	1 isKindOf: Number. true
+	1 isKindOf: Object. true
+	1 isKindOf: String. false
+	1/3 isKindOf: Number. true
+	1/3 isKindOf: Integer. false
+	
+	1 respondsTo: #,. true
+	1/3 respondsTo: #factorial. false
+	3 respondsTo: #factorial. true
+
+
+
+ "------ ЛОГІЧНІ ВИРАЗИ
+{ Виконайте наступні приклади за допомогою <Print it> }"
+
+    5 factorial > 100 & 7 odd. true
+
+    (250 sqrt between: 16 and: 15) | (5 sin > 1). false
+
+    (195 \\ 3 = 0 | (195 \\ 7 = 0)) & (1/3 between:0 and:0.5). true
+" * * * "
+"{ Виконайте як нероздільний блок }"   
+    aChar := 65 asCharacter.
+    aChar >= $0 and: [ aChar <= $9 ]. false
+" * * * "
+"{ Відкрийте попередньо вікно Transcript. Виконайте як нероздільний блок }"   
+    aChar := 65 asCharacter.
+    aChar >= $0 and: [ Transcript show: aChar printString; cr. aChar <= $9 ]. false
+" * * * "
+"{ Виконайте як нероздільний блок }"   
+    anInteger := (UIManager default request: 'Input number of a year' initialAnswer: '2000' title: 'Is it leap year?') asInteger.
+    ^anInteger\\4 = 0
+        and:[anInteger\\100 > 0 or:[anInteger \\ 400 = 0]]. true
+
+" * * * "
+anInteger := (UIManager default request: 'Input a number' initialAnswer: '3' title: 'Is it an odd number?') asInteger.
+    ^anInteger%2 = 1. true
+
+
+" ------ ГАЛУЖЕННЯ
+{ Виконайте наступні приклади як нероздільний блок за допомогою <Print it> }"
+" * * * "
+    3 < 4
+        ifTrue:  ['The true block executed']
+        ifFalse: ['The false block executed']. 'The true block executed'
+" * * * "
+    a := 5 squared.  Transcript show:'  a=',a printString; cr.
+    b := 4 factorial.Transcript show:'  b=',b printString; cr.
+    a < b
+        ifTrue:  [max := b]
+        ifFalse: [max := a]. 
+    Transcript show:'max=',max printString; cr.
+     ^max.     25                             
+" * * * "
+    answer := (UIManager default confirm: 'Continue ?')
+                     ifTrue: [ 'Yes' ]  ifFalse: [ 'No' ].
+    ^answer. 'Yes'
+" * * * "
+    a:=UIManager default request: 'Input first number:'.
+    a notNil ifTrue: [ a := a asNumber ]
+             ifFalse: [ UIManager default inform: 'Process stoped'. ^nil ].
+    b:=(UIManager default request: 'Input second number, please:') asNumber.
+    c:=UIManager default
+chooseFrom: #('circle' 'oval' 'square' 'rectangle' 'triangle') values: #(5 10 15 20 25)
+lines: #() message: 'And now third one! Choose a shape'.
+    max:= a>b ifTrue: [ a>c ifTrue:[a] ifFalse:[c]]
+              ifFalse:[ b>c ifTrue:[b] ifFalse:[c]].
+    ^'max(',a printString,',',b printString,',',c printString,')=',max printString. 'max(1,2,10)=10'
+
+" * * * "
+	res := 0.
+	a:=UIManager default
+	chooseFrom: #('15' '30' '8' '125') values: #(true false false false)
+	lines: #() message: '3 * 5 = '.
+	a ifTrue: [ res := res + 1 ].
+	
+	b:=UIManager default
+	chooseFrom: #('Червоного' 'Синього' 'Жовтого' 'Чорного') values: #(false false true false)
+	lines: #() message: 'Якого кольору були чоботи у Кайдашихи із твору І.Н. Левицького "Кайдашева сім*я"'.
+	b ifTrue: [ res := res + 1 ].
+	
+	c:=UIManager default request: 'Введіть значення числа Pi'.
+    c notNil ifTrue: [ c := c asNumber ]
+             ifFalse: [ UIManager default inform: 'Process stoped'. ^nil ].
+	(c closeTo: 3.1415926  precision: 0.05)ifTrue: [ res := res + 1 ].
+	Transcript show:' Правильних відповідей: ',res printString, '/3'; cr.
+	^res. 3
+	
+"
+ ------ ПОВТОРЕННЯ (ЦИКЛИ)
+
+{ Виконайте приклади за допомогою <Print it> } "
+
+ " Обчислення n! різними способами (не вбудованим методом) "
+
+"| n f |"
+    n:=(UIManager default request:'Input a nonegative integer') asInteger.
+    n < 0 ifTrue: [n := n negated ].
+    f := 1.
+    n timesRepeat: [ f := f*n. n := n - 1 ].
+    ^f . 720
+" * * * "
+"| n f |"
+    n:=(UIManager default request:'Input a nonegative integer') asInteger.
+    n < 0 ifTrue: [n := n negated ].
+    f := 1.
+    1 to: n do: [ :i | f := f * i ].
+    ^f . 720
+" * * * "
+"| n f |"
+    n:=(UIManager default request:'Input a nonegative integer') asInteger.
+    f := 1.
+    [ n > 1 ] whileTrue: [ f := f*n. n := n - 1 ].
+    ^f. 720
+
+" * * * "
+"| n f |"
+    n:=(UIManager default request:'Input a nonegative integer') asInteger.
+    f := 1.
+    [ n < 1 ] whileFalse: [ f := f*n. n := n - 1 ].
+    ^f. 720
+" * * * "
+"| n f |"
+    n:=(UIManager default request:'Input a nonegative integer') asInteger.
+    n < 0 ifTrue: [n := n negated ].
+    f := n.
+    n - 1 timesRepeat: [ n := n - 1 . f := f*n].
+    ^f . 720
+
+" * * * Сума гармонійного ряду "
+
+"| n s i |"
+    n:=(UIManager default request:'Input a number (<=10)' initialAnswer: '2') asNumber.
+    s:=0. i:=0.
+    [ s > n ] whileFalse: [ i:=i+1. s:=1.0/i+s ].
+    ^i. 4
+
+"| n s i |"
+    n:=(UIManager default request:'Input a number (<=10)' initialAnswer: '2') asNumber.
+    s:=0. i:=0.
+    [ s < n ] whileTrue: [ i:=i+1. s:=1.0/i+s ].
+    ^i. 4
+
+" * * *  Ще одна цікава сума "
+"| sum |"
+     sum := 0.
+     1/2 to: 1 by: 1/8 do: [ :i |
+          sum := sum + i ].
+     ^sum.
+ (15/4)
+"| sum |"
+     sum := 0.
+	  i:= (1/2).
+	  [ i <= 1 ] whileTrue: [ sum := sum + i. i:= i + (1/8) ].
+     ^sum. (15/4)
+          
+" * * *  Ряд Маклорена для f(x) = sin x "
+  " 0.5 sin = 4.79425539e-1 "
+
+"| x s k y d |"
+    x:=0.5. y:=x*x negated. k:=2.
+    d:=x. s:=x.
+    [ d abs > 1e-5 ] whileTrue:
+    [ d:=d*y/k/(k+1). s:=s+d. k:=k+2 ].
+    ^s.   0.479425533234127
+
+"| x s k y d |"
+    x:=0.5. y:=x*x negated. k:=2.
+    d:=x. s:=x.
+    [ d abs <= 1e-5 ] whileFalse:
+    [ d:=d*y/k/(k+1). s:=s+d. k:=k+2 ].
+    ^s. 0.479425533234127
+
+" * * *  Обчислення значення числа, з якого починається рядок "
+
+"| string index answer c |"
+      string := '1234 is the number'.
+      answer := 0.
+      index := 1.
+      string size timesRepeat: [
+           c := string at: index.
+           (c < $0 or: [ c > $9 ] )
+               ifTrue: [^answer].
+           answer := answer * 10
+               + c asciiValue - $0 asciiValue.
+           index := index + 1].
+     ^answer.  1234            
+                  
+"| string index answer c |"
+
+      string := '1234 is the number'.
+      answer := 0.
+      1 to: string size do: [:index |
+           c := string at: index.
+           (c < $0 or: [ c > $9 ] )
+               ifTrue: [^answer].
+				c := (c asString) asNumber.
+           answer := answer * 10
+               + c].
+     ^answer. 1234  
+
+" * * *  Перетворення рядка літер "
+
+ "| string index c |"
+    string := String withAll: 'Now is THE time'.
+    index := 1.
+    string size timesRepeat: [
+         c := string at: index.
+         string
+             at: index
+             put:
+                 (c isVowel
+                     ifTrue: [ c asUppercase ]
+                     ifFalse: [ c asLowercase ] ).
+         index := index + 1 ].
+    ^string. 'nOw Is thE tImE'
+
+ "| string index c |"
+    string := String withAll: 'Now is THE time'.
+    1 to: string size do: [:index |
+         c := string at: index.
+         string
+             at: index
+             put:
+                 (c isVowel
+                     ifTrue: [ c asUppercase ]
+                     ifFalse: [ c asLowercase ] ). ].
+    ^string.  'nOw Is thE tImE'
+
+ "| string index c |"
+    string := String withAll: 'Now is THE time'.
+    index := 1.
+    [ index <= string size ] whileTrue: [
+         c := string at: index.
+         string
+             at: index
+             put:
+                 (c isVowel
+                     ifTrue: [ c asUppercase ]
+                     ifFalse: [ c asLowercase ] ).
+         index := index + 1 ].
+    ^string.  'nOw Is thE tImE'
+
+"{ Виконайте наступні приклади за допомогою <Do it> }"
+
+" * * *  Копіювання файла "
+" Вважається, що папка з лабораторними називається Labs і вкладена в папку Pharo "
+"| path input output |"
+     path := FileSystem workingDirectory asPath parent parent pathString, '/Labs/'.
+     path := path collect: [ :aChar | aChar == $/ ifTrue: [ $\ ] ifFalse: [ aChar ] ] from: 2 to: path size.
+     input := File openForReadFileNamed: path, 'Pharo-9_Lab2.txt'.
+     output := File openForWriteFileNamed: path, 'CopyPharoLab2.txt'.
+     [input atEnd]
+          whileFalse: [output nextPut: input next].
+			
+     input close.
+     output close. BinaryFileStream: 'C:\Users\sophi\Documents\Pharo\Labs\CopyPharoLab2.txt'
+
+"{ Екземплярами яких класів є створені в цьому прикладі об'єкти input, output ? }
+ output: AbstractBinaryFileStream subclass: #BinaryFileStream
+			instanceVariableNames: ''
+			classVariableNames: ''
+			package: 'Files-Streams'
+ input : AbstractBinaryFileStream subclass: #BinaryFileStream
+		   instanceVariableNames: ''
+		   classVariableNames: ''
+			package: 'Files-Streams'
+ AbstractBinaryFileStream >> BinaryFileStream
+
+ ------ ІТЕРАТОРИ
+
+{ Ітератор - метод перебору та опрацювання елементів колекції.     }
+{ Дію ітераторів продемонструємо на прикладі масиву. Use <Print it> }"
+" * * * "
+    Transcript cr.
+    #(2 4 8 16 32) do: [:x | x printOn: Transcript. Transcript tab].
+    Transcript show:' '; cr. Transcript  "Вивід елементів колекції у Transcript"
+" * * * "
+"| m a |"
+    a := #(3 7 5 0 2).
+    m:=a at: 1.
+    a do: [ :x | m := m max: x ].
+    ^m. 7 "Пошук максимального елемента колекції шляхом ітеративної зміни значення змінної m"
+" * * * "
+    #(0 2 4 6) collect: [ :x | x*x ] #(0 4 16 36) "Піднесення всіх елементів колекції до квадрату"
+" * * * "
+    #(1 2 3 4 5 6 7 8 9) select: [ :x | x even ] #(2 4 6 8) "Вибір лише парних елементів колекції"
+" * * * "
+    #(1 2 3 4 5 6 7 8 9) reject: [ :x | x even ] #(1 3 5 7 9) "Вибір усіх елементів колекції які не є парними"
+" * * * "
+    #(1 2 4 8 16 32 64) detect: [ :x | x > 10 ] 16 "Пошук першого елемента колекції більшого за 10"
+" * * * "
+    #(1 2 4 8 16 32 64) includes: 6 squared false "Перевірка чи містить колекція 6^2"
+	 #(1 2 4 8 16 32 36 64) includes: 6 squared true 
+" * * * "
+    #(1 2 3 4 5) inject:0 into: [ :s :x | s+x ] 15  "Знаходження суми елементів колекції, початкове значення - 0"
+    #(1 2 3 4 5) inject:1 into: [ :f :x | f*x ] 120 "Знаходження добутку всіх елементів колекції, початкове значення - 1"
+    #(1 2 3 4 5) inject:0 into: [ :m :x | m max:x ] 5 "Знаходження максимального елемента колекції, початкове значення 0, 
+																		у випадку якщо всі елементи колекції відємні не дає коректних результатів."
+	 #(-1 -2 -3 -4 -5) inject:0 into: [ :m :x | m max:x ] 0
+	" * * * "
+	 a := #(-1 -2 -3 -4 -5).
+	 a inject: (a at: 1) into: [ :m :x | m max:x ] -1 
+	" * * * "
+    #(1 2 3 4 5) inject:0 into: [ :m :x | m min:x ] 0 "Знаходження найменшого елемента колекції, дає не коректні результати у випадку 
+																	   коли кожен елемент колекції > 0."
+	" * * * "
+	 a := #(1 2 3 4 5).
+	 a inject: (a at: 1) into: [ :m :x | m min:x ]  1
+
+"{   Що робить кожен з ітераторів?   Які ще є ітератори в протоколі  }
+ { класу Collection? Наведіть власні приклади використання ітераторів }"
+
+	 #(1 2 3 4 5) reverseDo: [ :each | Transcript show: each; cr ]. #(1 2 3 4 5) "Вивід кожного елемента колекції у транскрипт у зворотньому порядку"
+	" * * * "
+	 #(5 6 7 8 9) doWithIndex: [ :each :i| Transcript show: (each + i);cr] "Вивід суми кожного елемента колекції із її індексом у транскрипт"
+	" * * * "
+	 res := ''.
+	 #(1 2 3 4 5)
+    	 do: [ :e | res := res, (e asString) ]
+    	 separatedBy: [ res := res, '.' ].
+	 res '1.2.3.4.5' "Конкатинація всіх елементів списку в стрінгу розділену крапками"
+	" * * * "
+	#( 2 -3 4 -35 4 -11) collect: [ :each | each abs ]  #(2 3 4 35 4 11) "Знаходження модуля від кожного елемента колекції."
+	" * * * "
+	'abc' asArray collect: [ :ea | ea asciiValue ]. #(97 98 99) "Передворення стрінги у колекцію значень ASCII кожного символа початкової стрінги"
+	" * * * "
+	(1 to: 5) collect: [ :ea | ea * 2 ] #(2 4 6 8 10) "Знаходження квадратів чисел від 1 до 5"
+	" * * * "
+	#(16 11 68 19) select: #odd #(11 19) "Ще один спосіб реалізації вибору непарних елементів колекції"
+	" * * * "
+	#(16 11 68 19) count: [ :x|x > 16 ] 2 "Обчислюємо кількість елементів колекції більших за 16."
+	
+	#(16 11 68 19) intersection: #(11 16 15) #(11 16) "Результуюча колекція - перетин двох колекцій"
+	#(16 11 68 19) union: #(11 16 15)  #(11 15 68 16 19) "Результуюча колекція - об'єднання двох колекцій"
+	
+	"ВЛАСНІ ПРИКЛАДИ"
+	
+	
+	"{   Розклад числа на прості множники }"
+	res := OrderedCollection new. 
+	n:=(UIManager default request:'Input a nonegative integer') asInteger.
+	c:= 2.
+	[ n > 1 ] whileTrue: [
+								(n % c = 0) ifTrue: [res add: c. n:=n/c ].
+								(n % c = 0) ifFalse: [ c:= c + 1 ]
+								].
+	^res.  an OrderedCollection(2 2 5 5)
+	" * * * "
+	
+	
+	"{   Інтегрування функції sin(x) на заданому інтервалі.}"
+	a := (UIManager default request:'Введіть нижню межу інтегрування:' initialAnswer: '0') asInteger.
+	b := (UIManager default request:'Введіть верхню межу інтегрування:' initialAnswer: '1') asInteger.
+	n := 100.
+	w := (b - a)/n.
+	res:=0.5 * (a sin).
+	1 to: (n - 1) do: [ :i | res := res + ((a + (i * w)) sin)].
+	res:= (res + (0.5 * (b sin))) * w.
+	^res  0.4596938633113578 
+	
+	
+	"{   Сума ряду для знаходження значення ln(2)}"
+	e := 0.0001.
+	d := 1.
+	i := 0.
+	res:= 0.
+	[ d > e ] whileTrue: [ d := (1.0 / (2 * i + 1) / (2 * i + 2)). 
+								 i := i + 1.
+								 res:= res + d].
+							
+	^res.  0.6882692478405775
+	
+	
