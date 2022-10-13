@@ -1,0 +1,13 @@
+'From Pharo10.0.0 of 27 September 2022 [Build information: Pharo-10.0.0+build.532.sha.d9f862003a88bfc9a17ff12ab7a11abf1fe154a9 (64 Bit)] on 13 October 2022 at 10:12:39.974 pm'!
+Object subclass: #Circle
+	instanceVariableNames: 'r'
+	classVariableNames: ''
+	package: 'lab3'!
+
+!Circle methodsFor: 'initialization' stamp: 'Sophiyca 10/13/2022 18:59'!
+initialize: rad
+	r := rad.! !
+
+!Circle methodsFor: 'initialization' stamp: 'Sophiyca 10/13/2022 19:02'!
+initialize
+	r := 1.! !

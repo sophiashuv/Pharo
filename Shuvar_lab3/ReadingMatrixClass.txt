@@ -1,0 +1,43 @@
+'From Pharo10.0.0 of 27 September 2022 [Build information: Pharo-10.0.0+build.532.sha.d9f862003a88bfc9a17ff12ab7a11abf1fe154a9 (64 Bit)] on 13 October 2022 at 10:13:35.01 pm'!
+Object subclass: #ReadingMatrixClass
+	instanceVariableNames: ''
+	classVariableNames: ''
+	package: 'lab3'!
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+ReadingMatrixClass class
+	instanceVariableNames: ''!
+
+!ReadingMatrixClass class methodsFor: 'as yet unclassified' stamp: 'Sophiyca 10/13/2022 17:57'!
+maxelements_in_matrixrows_formfile
+	"comment stating purpose of class-side method"
+	"scope: class-variables  &  class-instance-variables"	
+			
+	| matr fStream fName n m mMatr mLines |
+        "Вибір файла за допомогою діалогу"
+    (fName:=UIManager default
+			chooseFullFileNameMatching: nil 
+			label: 'Виберіть файл з числовими даними' ) isNil
+        ifTrue: [ ^'Ви не вибрали файла' ]. 
+        fStream := fName asFileReference readStream.
+	        "Введення даних"
+ 	    n := Integer readFrom: fStream.  
+	    matr := Array new: n.
+	    m := Integer readFrom: fStream.
+	    matr := matr collect: [ :x | Array new: m ]. 
+	    1 to: n do: [ :i |  fStream nextLine.
+ 		     matr at: i put: (
+				 (matr at: i) collect: [ :x |  
+						Integer readFrom: fStream. ]
+					 )	 ].
+    fStream close. matr inspect.
+        "Обчислення максимальних елементів"
+    mLines:=matr collect: [ :r | r inject: (r at: 1) into: [ :x :y | x max: y] ].
+    mMatr:=mLines at: 1.
+    mLines do: [ :x | x > mMatr ifTrue: [ mMatr := x ] ].
+        "Побудова імені файла результатів, збереження"
+    fName at: fName size - 4 put: $_ .
+    fStream := fName asFileReference writeStream.
+    mLines do: [ :x | x printOn: fStream. fStream cr ].
+    fStream close.
+    ^mMatr .! !

@@ -1,0 +1,405 @@
+"--------------------------------------------------------------------------------------
+*                      ЛАБОРОТОРНА РОБОТА 3
+*                 Тема: КЛАСИ ТА МЕТОДИ. КОЛЕКЦІЇ
+*
+*  Завдання до лабораторної роботи:
+*     1. Виконайте наведені нижче приклади, збережіть і поясніть отримані результати.
+*     2. Випробуйте різноманітні способи додавання нових класів до системи.
+*     3. Навчіться доповнювати функціональність класів.
+*     4. Випробуйте методи опрацювання колекцій.
+*
+
+    Виконайте за допомогою <Print it> 
+
+ ------ ПРИНАЛЕЖНІСТЬ КЛАСОВІ, ІЄРАРХІЯ КЛАСІВ
+"
+    #(Francesca Jackie Marisa Bree) class. Array
+    (#(Francesca Jackie Marisa Bree) at:2) class. ByteSymbol
+    'Rakesh Vijay Charles Daniel Tyler' class. ByteString
+    ('Rakesh Vijay Charles Daniel Tyler' at:2) class. Character
+    World class . WorldMorph
+    Magnitude class. Magnitude class
+    Magnitude class class. Metaclass
+    nil class. UndefinedObject
+	 nil species.  UndefinedObject
+    5 species. SmallInteger
+	 5 class. SmallInteger
+    123456789000 species. SmallInteger
+	 123456789000 class.  SmallInteger
+    #aName species. ByteString
+	 #aName class. ByteSymbol
+	 #(Francesca Jackie Marisa Bree) species. Array
+	 (1 to: 10) class. 	 Interval									
+	 (1 to: 10) species. 	 Array		
+	 ((1 to: 10) select: [ :x | x even ]) class.		 Array		
+	 ( #aName select: [ :x | x isVowel]) class.	 ByteString	
+ " Яка різниця між повідомленнями class i species ? 
+	Із останніх прикладів видно, що навідміну від class, який визначає приналежність обєкта до певного класу, 
+	species визначає бажаний для реконструкції обєкта клас , тобто той який ми отримаєм після застосування 
+	таких повідомлень як collect: або select:.
+
+
+    Випробуйте різні способи відкривання браузера класів: за допомогою меню чи програмно 
+     Виконайте за допомогою <Do it>
+"
+    ClyFullBrowserMorph open.
+    ClyFullBrowserMorph openOnClass: Date.
+    ClyFullBrowserMorph openOnClass: VolumeShape  selector:  #volume.
+
+" ------ МЕТОДИ КЛАСУ, КОНСТРУКТОРИ
+  Виконайте за допомогою <Print It>. Запропонуйте власні приклади. "
+
+    Array new: 10. #(nil nil nil nil nil nil nil nil nil nil)        
+    OrderedCollection  new. an OrderedCollection()
+    Date today. 12 October 2022
+    Time now. 11:46:19.503 pm
+    UIManager default  request:'How are you?' initialAnswer:'I''m fine!'. 'I''m fine!'
+    Integer readFrom: '2013  1925'. 2013
+    Integer primesUpTo: 100. #(2 3 5 7 11 13 17 19 23 29 31 37 41 43 47 53 59 61 67 71 73 79 83 89 97)
+    Rectangle origin:0@0 corner:200@100. (0@0) corner: (200@100)
+    Date nameOfMonth:12. #December
+    Date dayOfWeek: #Friday. 6
+	
+	 Date today year. 2022
+	 Date today  printFormat: #(2 1 3 $/ 1 2). '10/13/22'
+	 Date today equals: Date yesterday.  false
+	 36 digitSum. 9
+	 14 gcd: 144. 2
+	
+	 Color red asHexString. 'FF0000'
+	 (Color r: 0.5 g: 0.5 b: 1) asHexString.  '8080FF'
+	 Color red asMorph openInWorld. a Morph(42987776)
+	"red - the Color class has a set of default color names that it can recieve as messages, of which red is one. 
+	        Behind the scenes, all default color method returns a registered color object. 
+	asMorph - the asMorph message is the one that I defined on the Color class. It returns an instance of a Morph user interface for our Color object.
+	openInWorld - the final message 'openInWorld' does just what it says. It opens the interface element in the World so that we can see it."
+	
+    Date orthodoxEasterDateFor: 2022.  24 April 2022"якщо не працює, доповніть клас Date наступними методами"
+	 Date easterDateFor: 2022.  17 April 2022
+
+
+   
+"Інсталюйте вказані нижче МЕТОДИ КЛАСУ Date:
+  перенесіть копію тексту визначення методу з робочого вікна в браузер класів."
+
+"!Date class methodsFor: 'specific inquiries' stamp: 'CamilloBruni 8/22/2013 19:47'!"
+
+orthodoxEasterDateFor: year
+ "  compute the easter date according to the rules of the orthodox calendar.
+    source:       http://www.smart.net/~mmontes/ortheast.html   "
+     | r1 r2 r3 r4 ra rb r5 rc date |
+
+    r1 := year \\ 19.
+    r2 := year \\ 4.
+    r3 := year \\ 7.
+    ra := 19*r1 + 16.
+    r4 := ra \\ 30.
+    rb := r2 + r2 + (4*r3) + (6*r4).
+    r5 := rb \\ 7.
+    rc := r4 + r5.
+    date := self year: year month: 4 day: 3.
+    ^date addDays: rc.
+"--------------------------------------------------------------------------------------"
+"!Date class methodsFor: 'specific inquiries' stamp: 'CamilloBruni 8/22/2013 19:48'!"
+
+easterDateFor: year
+ "  compute the easter date.
+    source: Physikalisch-Technische Bundesanstalt Braunschweig.
+    Lichtenberg, H.: Zur Interpretation der Gaussschen Osterformel und ihrer Ausnahmeregeln, Historia Mathematica 24 (1997), pp. 441-444
+      http://www.ptb.de/de/org/4/44/441/oste.htm  "
+
+  | k m s a d r og sz oe day |
+
+  k := year // 100.
+  m := 15 + (3*k + 3//4) - (8*k + 13//25).
+   s := 2 - (3*k + 3// 4).
+  a := year \\ 19.
+  d := 19*a + m \\ 30.
+  r := d//29 + ((d//28) - (d//29)* (a// 11)).
+
+  og := 21 + d - r.
+  sz := 7 - (year//4 + year + s\\7).
+  oe := 7 - (og - sz\\7).
+  day := og + oe.
+  ^day <= 31
+    ifTrue: [ Date year: year month: 3 day: day ]
+    ifFalse: [ Date year: year month: 4 day: day - 31 ].
+
+"Знайдіть роки, коли святкування припадають на один день."
+
+	easterDateEqualsorthodoxEasterDate: number
+	"
+	Method that returns number last years where easterDateFor equals orthodoxEasterDateFor.
+	"
+	| year res i k s|
+	year := Date today year.
+	res := OrderedCollection new. 
+	i := 0. 
+	[ i < number ] whileTrue: [
+								k:= Date easterDateFor: year.
+								s:= Date orthodoxEasterDateFor: year.
+								(k = s) ifTrue: [res add: year.i:=i+1. ].
+								year:=year - 1.
+							
+								].
+	^res.  
+	
+	Date easterDateEqualsorthodoxEasterDate: 3. an OrderedCollection(2017 2014 2011)
+	
+
+" ------ РЕКУРСІЯ
+  Додайте до класу Integer і випробуйте різні методи обчислення чисел  Фібоначчі.
+  Запропонуйте власні. Порівняйте їхню ефективність.      
+  Перед випробуванням fibonacci ЗБЕРЕЖІТЬ ІМІДЖ СИСТЕМИ! Він може зайняти Ваш комп на тиждень.  "
+
+" * ------- "
+fibonacci
+        "Answer the nth fibonacci number, where n is the receiver."
+    ^self < 2
+        ifTrue: [1]
+        ifFalse:[(self - 1) fibonacci + (self - 2) fibonacci]
+4 fibonacci. 5
+" * ------- "
+fibo
+        "Frontend function to call fibStart: with: .
+         Answer the nth fibonacci number, where n is the receiver."
+    ^self fibStart:1 with:1
+" * ------- "
+fibStart: n1 with: n2
+        "Private - Calculate the n-th Fibonacci number, where
+         n is the receiver, n1 is previous Fibonacci number
+         and n2 - the preprevious one."
+ ^ (self < 2)
+        ifTrue: [ n1 ]
+        ifFalse:[ (self - 1) fibStart: n1+n2 with:n1 ]
+4 fibo. 5
+
+" * ------- "
+
+myfibo
+	"Count Calculate the n-th  Fibonacci number with a loop"
+	| a b c|
+	a:=0.
+	b:=1.
+	(self < 2)
+      ifFalse:[
+				2 to: self + 1 do: [ :i | c:=a + b. a:=b. b:=c ].
+					].
+	^b
+4 myfibo.	 5
+	
+"------------------------------------------------------------------------------------
+ ------ СТВОРЕННЯ, ОПРАЦЮВАННЯ КОЛЕКЦІЙ
+  У текстовому файлі записано інформацію про матрицю цілих чисел: розміри
+  матриці в першому рядку файла, у всіх наступних рядках - рядки матриці.}
+  Прочитати матрицю, знайти максимальні елементи кожного рядка і зберегти
+  їх у файлі. Надрукувати максимальний елемент цілої матриці."
+
+"Наведений нижче код можна виконати безпосередньо в робочому вікні,
+ проте,  доцільно зробити його методом власного навчального класу."
+
+| matr fStream fName n m mMatr mLines |
+        "Вибір файла за допомогою діалогу"
+    (fName:=UIManager default 
+			chooseFullFileNameMatching: nil 
+			label: 'Виберіть файл з числовими даними' ) isNil
+        ifTrue: [ ^'Ви не вибрали файла' ].  "У змінній fNamе отримуємо повну назву обраного файлу(зазамовчуванням nil), у другому випадку метод вертатиме 'Ви не вибрали файла' "
+        fStream := fName asFileReference readStream. "У fStream отримуємо потік для читання файлу."
+	        "Введення даних"
+ 	    n := Integer readFrom: fStream. "у змінній n зберігаємо перше число зчитане з текстового файлу"
+	    matr := Array new: n. "створюється масив розміру n"
+	    m := Integer readFrom: fStream. "у змінній m зберігаємо друге число зчитане з текстового файлу"
+	    matr := matr collect: [ :x | Array new: m ]. "У кожну комірку попередньоствореного масиву записується масив розміру m"
+	    1 to: n do: [ :i |  fStream nextLine.
+ 		     matr at: i put: (
+				 (matr at: i) collect: [ :x |  
+						Integer readFrom: fStream. ]
+					 )	 ].
+    fStream close. "зчитуємо кожен рядок тектового файлаnewPinned: після чого закриваємо потік"
+	 matr inspect. "відкриття вікна інспектора для огляду створеного обєкта"
+        "Обчислення максимальних елементів"
+    mLines:=matr collect: [ :r | r inject: (r at: 1) into: [ :x :y | x max: y] ].
+    mMatr:=mLines at: 1. "mMatr рівна першому елементу масиву mLines де містяться максимальні значення рядків матриці"
+    mLines do: [ :x | x > mMatr ifTrue: [ mMatr := x ] ].
+        "Побудова імені файла результатів, збереження"
+    fName at: fName size - 4 put: $_ ."Змінюємо назву файлу додвши симво _ на 4 позицію з кінця стрічки"
+    fStream := fName asFileReference writeStream. "Створюємо потік для запису файлу"
+    mLines do: [ :x | x printOn: fStream. fStream cr ].
+    fStream close. "Закриваємо потік"
+    ^mMatr .  20 'Ви не вибрали файла' 
+
+	ReadingMatrixClass maxelements_in_matrixrows_formfile. 20
+" Поясніть код, наведений вище (кожне повідомлення!) 
+   Як замінити масивмасивів на екземпляр класу Matrix?
+Використовую Array2D так як Matrix не використовується від Pharo 7.
+"
+| matr fStream fName n m mMatr mLines temparr|
+        "Вибір файла за допомогою діалогу"
+    (fName:=UIManager default
+			chooseFullFileNameMatching: nil 
+			label: 'Виберіть файл з числовими даними' ) isNil
+        ifTrue: [ ^'Ви не вибрали файла' ]. 
+        fStream := fName asFileReference readStream.
+	        "Введення даних"
+ 	    n := Integer readFrom: fStream.  
+	    "matr := Array new: n."
+	    m := Integer readFrom: fStream.
+	    "matr := matr collect: [ :x | Array new: m ]. "
+		matr := Array2D rows: n columns: m .
+		
+		
+		matr indicesCollect:  [ :i :j | 0 ].
+		1 to: n do: [ :i |  fStream nextLine.
+			1 to: m do: [ :j | matr at:i at:j put: (Integer readFrom: fStream)]].
+		
+	
+    fStream close. matr inspect.
+        "Обчислення максимальних елементів"
+	 mLines:= Array new: n.
+	 1 to: n do: [:i|mLines at: i put: ((matr atRow:i) max)].
+	 mMatr := mLines max.
+        "Побудова імені файла результатів, збереження"
+    fName at: fName size - 4 put: $O .
+    fStream := fName asFileReference writeStream.
+    mLines do: [ :x | x printOn: fStream. fStream cr ].
+    fStream close.  
+    ^mMatr.  20
+"
+======================================================
+
+ ------ АДРЕСНА КНИГА
+ Приклад створення і використання адресної книги, описаний у одній з лекцій. 
+ Пригадуєте, спочатку оголошуємо глобальну змінну, що міститиме впорядковану 
+ колекцію масивів з трьох рядків. Спосіб порівняння описує бінарний блок.    "
+
+    Smalltalk globals at: #AddressBook
+              put:(SortedCollection sortBlock:[:a :b | (a at:1)<=(b at:1)]). a SortedCollection()
+
+" * --- Тепер до книги можна додавати записи. "
+
+    AddressBook
+            add: #('Ruth' 'Babe' '456 Mudville Flats');
+            add: #('Smith' 'John' '12/5 Park Ave');
+            add: #('Jexon' 'John' '5 Baverli Hills');
+            add: #('Adams' 'John' '1 Hell str');
+            add: #('Taylor' 'Babe' '2a/35 Deribas str');
+            add: #('Greg' 'Voss' '12345 the USA'). #('Greg' 'Voss' '12345 the USA') #('Greg' 'Voss' '12345 the USA')
+
+" * --- Додайте власні записи. Видрукуйте вміст книги (код запропоновано нижче).  "
+
+   | s w |  s := WriteStream on: String new.
+    AddressBook do:[:x | x do:
+        [ :y | s nextPutAll: y; tab; tab.].
+        s cr. ].
+  w := Workspace openLabel: 'My Address Book'.
+  w contents: s contents. true
+
+" * ----  Наступне завдання - надрукувати список прізвищ людей з однаковими іменами. 
+              Приклад демонструє різні способи перебору та перетворення колекцій."
+
+ | firstNames duplicates |
+    firstNames:=Bag new.        "утворимо торбу імен"
+    AddressBook do: [ :entry | firstNames add: (entry at: 2) ].
+        "виберемо ті імена, які зустрічаються більше одного разу"
+    duplicates:=firstNames select:
+        [ :name | (firstNames occurrencesOf: name)>1 ].
+            "і впорядкуємо їх"
+    duplicates:=duplicates asSet asSortedCollection.
+        "друкуємо імена та відповідні їм прізвища"
+    duplicates do: [ :first | first printOn: Transcript. Transcript show:'==>'.
+        AddressBook do: [ :entry | (entry at: 2)=first
+            ifTrue: [ Transcript show:' '. (entry at: 1) printOn: Transcript ] ].
+        Transcript cr ]. Transcript show:' '. Transcript
+
+
+" Поясніть перетворення, що відбуваються в цьому фрагменті. 
+   Запропонуйте власні варіанти використання та перетворення колекцій. 
+   Оформіть запропоновані вище фрагменти як методи навчального класу."
+addbook:= AddressBookClass new. an AddressBookClass
+addbook add: #('Ruth' 'Babe' '456 Mudville Flats');
+		 add: #('Smith' 'John' '12/5 Park Ave');
+            add: #('Jexon' 'John' '5 Baverli Hills');
+            add: #('Adams' 'John' '1 Hell str');
+            add: #('Taylor' 'Babe' '2a/35 Deribas str');
+            add: #('Greg' 'Voss' '12345 the USA'). an AddressBookClass
+
+addbook printAddressBook. an AddressBookClass
+addbook getAllWithSameSurnames. an AddressBookClass
+
+" ------ ДОДАВАННЯ АДРЕС
+  Можливо, додавання записів до AddressBook за допомогою явного програмування 
+  виглядає не надто привабливо. Використайте з цією метою діалоги "
+
+| a b c | 
+a := UIManager default request: 'Input first name'.
+b := UIManager default request: 'Input second name'.
+c := UIManager default request: 'Input address'.
+a isNil | b isNil | c isNil ifFalse: [ AddressBook add: (Array with:a with:b with:c)]. #('в' 'в' 'в')
+
+addbook addWithUIManager. an AddressBookClass  
+addbook printAddressBook. an AddressBookClass
+" Додайте до книги декілька нових записів, знову видрукуйте її. "
+                                    
+" Поміркуйте, як зробити зручнішим звертання до діалогу додавання адрес та друку адресної книги. "
+
+
+" Що станеться, якщо виконати наступний код? Випробуйте. - відбувається знищення глобальної змінної"
+    Smalltalk globals removeKey:#AddressBook. a SortedCollection(#('Adams' 'John' '1 Hell str') #('Greg' 'Voss' '12345 the USA') #('Jexon' 'John' '5 Baverli Hills') #('Ruth' 'Babe' '456 Mudville Flats') #('Smith' 'John' '12/5 Park Ave') #('Taylor' 'Babe' '2a/35 Deribas str') #('в' 'в' 'в'))
+
+
+ "------ ПЕРЕТВОРЕННЯ (ПЕРЕВТІЛЕННЯ) ОБ'ЄКТІВ
+   Виконайте за допомогою Do It. "
+
+ | a b c|
+    a := OrderedCollection new.
+    b := Cylinder  new.
+    c := Array with: a with: b with: b. 
+    Transcript show: 'Old Array is = '.
+    c do: [ :x | Transcript show: '     '. x printOn: Transcript ].
+    Transcript cr.
+    a become: b.
+    Transcript show: 'New Array is = '.
+    c do: [ :x | Transcript show: '     '. x printOn: Transcript ].
+    Transcript cr; show:' '. Transcript
+
+	a:=4.
+	b:=6.
+	a become: b.
+	a.
+	b. "error: 'can''t become immediates such as SmallIntegers or Characters'"
+	
+	" Поясніть дію методу become:. Чи можна замість нього користуватися звичайним присвоєнням? Наведіть власні приклади. "
+	
+	"become - міняє місцями вказівники на обєкти приймача та аргумента. 
+	Увипадку якщо хоть один з обєктів - SmallInteger не працює
+	"
+
+| a b c temp|
+    a := OrderedCollection new.
+    b := Cylinder  new.
+    c := Array with: a with: b with: b. 
+    Transcript show: 'Old Array is = '.
+    c do: [ :x | Transcript show: '     '. x printOn: Transcript ].
+    Transcript cr.
+	 temp := a.
+	 a := b.
+	 b := temp.
+    
+    Transcript show: 'New Array is = '.
+    c do: [ :x | Transcript show: '     '. x printOn: Transcript ].
+    Transcript cr; show:' '.  Transcript
+	 "
+	Old Array is =      an OrderedCollection()     a Cylinder     a Cylinder
+	New Array is =      an OrderedCollection()     a Cylinder     a Cylinder
+	
+	Як бачимо звичайне присвоєння не дає очікуваних результатів так як при присвоюються 
+	лише значення змінних а не посилання на них, таким чином масив с не змінюється" 
+	
+	
+	
+
+
+
+
+
+

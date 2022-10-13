@@ -1,0 +1,52 @@
+'From Pharo10.0.0 of 27 September 2022 [Build information: Pharo-10.0.0+build.532.sha.d9f862003a88bfc9a17ff12ab7a11abf1fe154a9 (64 Bit)] on 13 October 2022 at 10:12:16.675 pm'!
+Object subclass: #AddressBookClass
+	instanceVariableNames: 'address_book'
+	classVariableNames: ''
+	package: 'lab3'!
+
+!AddressBookClass methodsFor: 'adding' stamp: 'Sophiyca 10/13/2022 19:24'!
+add: el
+	address_book add: el.! !
+
+!AddressBookClass methodsFor: 'adding' stamp: 'Sophiyca 10/13/2022 19:56'!
+addWithUIManager
+	| a b c | 
+	a := UIManager default request: 'Input first name'.
+	b := UIManager default request: 'Input second name'.
+	c := UIManager default request: 'Input address'.
+	a isNil | b isNil | c isNil ifFalse: [ address_book  add: (Array with:a with:b with:c)]. #('в' 'в' 'в')! !
+
+
+!AddressBookClass methodsFor: 'printing' stamp: 'Sophiyca 10/13/2022 19:30'!
+printAddressBook
+	"comment stating purpose of instance-side method"
+	"scope: class-variables  &  instance-variables"	
+	 |s w|	
+    s := WriteStream on: String new.
+    address_book  do:[:x | x do:
+        [ :y | s nextPutAll: y; tab; tab.].
+        s cr. ].
+  w := Workspace openLabel: 'My Address Book'.
+  w contents: s contents. ! !
+
+
+!AddressBookClass methodsFor: 'initialization' stamp: 'Sophiyca 10/13/2022 19:48'!
+initialize 	
+	address_book := SortedCollection sortBlock:[:a :b | (a at:1)<=(b at:1)].! !
+
+
+!AddressBookClass methodsFor: 'as yet unclassified' stamp: 'Sophiyca 10/13/2022 19:29'!
+getAllWithSameSurnames
+	|firstNames duplicates |
+    firstNames:=Bag new.        "утворимо торбу імен"
+    address_book  do: [ :entry | firstNames add: (entry at: 2) ].
+        "виберемо ті імена, які зустрічаються більше одного разу"
+    duplicates:=firstNames select:
+        [ :name | (firstNames occurrencesOf: name)>1 ].
+            "і впорядкуємо їх"
+    duplicates:=duplicates asSet asSortedCollection.
+        "друкуємо імена та відповідні їм прізвища"
+    duplicates do: [ :first | first printOn: Transcript. Transcript show:'==>'.
+        address_book  do: [ :entry | (entry at: 2)=first
+            ifTrue: [ Transcript show:' '. (entry at: 1) printOn: Transcript ] ].
+        Transcript cr ]. Transcript show:' '.! !

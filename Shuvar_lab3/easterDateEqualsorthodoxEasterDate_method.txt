@@ -1,0 +1,16 @@
+easterDateEqualsorthodoxEasterDate: number
+	"
+	Method that returns number last years where easterDateFor equals orthodoxEasterDateFor.
+	"
+	| year res i k s|
+	year := Date today year.
+	res := OrderedCollection new. 
+	i := 0. 
+	[ i < number ] whileTrue: [
+								k:= Date easterDateFor: year.
+								s:= Date orthodoxEasterDateFor: year.
+								(k = s) ifTrue: [res add: year.i:=i+1. ].
+								year:=year - 1.
+							
+								].
+	^res. 

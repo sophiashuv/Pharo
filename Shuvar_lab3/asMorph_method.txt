@@ -1,0 +1,6 @@
+asMorph
+"The first line is the name of method 
+The second line returns a new Morph object that 
+is given the color value stored in the Color 
+object we are sending this message to."
+    ^ Morph new color: self

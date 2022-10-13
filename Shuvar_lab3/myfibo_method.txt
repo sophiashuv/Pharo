@@ -1,0 +1,10 @@
+myfibo
+	"Count Calculate the n-th  Fibonacci number with a loop"
+	| a b c|
+	a:=0.
+	b:=1.
+	(self < 2)
+      ifFalse:[
+				2 to: self + 1 do: [ :i | c:=a + b. a:=b. b:=c ].
+					].
+	^b
