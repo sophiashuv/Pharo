@@ -1,0 +1,152 @@
+'From Pharo9.0.0 of 6 September 2022 [Build information: Pharo-9.0.0+build.1580.sha.e1bb0fb7b6c4aaadd5106d19b58633c94dff1b69 (64 Bit)] on 20 October 2022 at 2:52:15.94 pm'!
+BorderedMorph subclass: #LOGame
+	instanceVariableNames: 'cells moves'
+	classVariableNames: 'Best_score Best_score_time Launch_amounts TheGame'
+	package: 'LightsOutGame'!
+
+!LOGame methodsFor: 'initialization' stamp: 'Sophiyca 10/20/2022 13:46'!
+moves
+"The number of moves along each side of the game"
+^moves
+! !
+
+!LOGame methodsFor: 'initialization' stamp: 'Sophiyca 10/20/2022 01:20'!
+GetNotFreeCellsAmount
+"The number of cells along each side of the game"
+|cells_amount n freeCellsAmount res|
+n := self cellsPerSide.
+cells_amount := (n * n).
+freeCellsAmount := self GetFreeCellsAmount.
+res := cells_amount - freeCellsAmount.
+^res.
+! !
+
+!LOGame methodsFor: 'initialization' stamp: 'Sophiyca 10/19/2022 21:51'!
+cellsPerSide
+"The number of cells along each side of the game"
+^10
+! !
+
+!LOGame methodsFor: 'initialization' stamp: 'Sophiyca 10/20/2022 00:53'!
+GetFreeCellsAmount
+"The number of cells along each side of the game"
+|n freeCellsAmount|
+freeCellsAmount:= 0.
+n:= self cellsPerSide.
+1 to: n do: [ :i |
+		1 to: n do: [ :j |(cells at:i at:j) isOn ifFalse: [freeCellsAmount := freeCellsAmount + 1]]].
+^freeCellsAmount.
+! !
+
+!LOGame methodsFor: 'initialization' stamp: 'Sophiyca 10/20/2022 14:19'!
+initialize
+ | sampleCell width height n |
+super initialize.
+n := self cellsPerSide.
+sampleCell := LOCell new.
+width := sampleCell width.
+height := sampleCell height.
+self bounds: (50@50 extent: ((width*n) @(height*n)) + (5 * self borderWidth)).
+cells := Array2D  new: n tabulate: [ :i :j | self newCellAt: i at: j ].
+moves := 0.
+
+
+! !
+
+!LOGame methodsFor: 'initialization' stamp: 'Sophiyca 10/20/2022 01:22'!
+newCellAt: i at: j
+"Create a cell for position (i,j) and add it to my on?screen
+representation at the appropriate screen position. Answer the new cell"
+| c origin |
+c := LOCell new.
+origin := self innerBounds origin.
+self addMorph: c.
+c position: ((i - 1) * c width) @ ((j - 1) * c height) + origin.
+c mouseAction: [self toggleNeighboursOfCellAt: i at: j.
+	 moves := moves + 1].
+^c
+! !
+
+!LOGame methodsFor: 'initialization' stamp: 'Sophiyca 10/19/2022 21:51'!
+toggleNeighboursOfCellAt: i at: j
+(i > 1) ifTrue: [ (cells at: i - 1 at: j ) toggleState].
+(i < self cellsPerSide) ifTrue: [ (cells at: i + 1 at: j) toggleState].
+(j > 1) ifTrue: [ (cells at: i at: j - 1) toggleState].
+(j < self cellsPerSide) ifTrue: [ (cells at: i at: j + 1) toggleState].
+! !
+
+"-- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- -- "!
+
+LOGame class
+	instanceVariableNames: ''!
+
+!LOGame class methodsFor: 'world menu' stamp: 'Sophiyca 10/20/2022 02:02'!
+open
+ TheGame ifNil:
+ [TheGame:= self new.
+  TheGame openInWorld.].! !
+
+
+!LOGame class methodsFor: 'initialize-release' stamp: 'Sophiyca 10/20/2022 13:27'!
+menuCommandOn: aBuilder
+  <worldMenu>
+(aBuilder item: #'LOGame')
+ order: 5;
+ with: [
+  (aBuilder item: #'Run Game')
+    order: 0;
+    action: [self open].
+  (aBuilder item: #'Exit Game')
+    order: 1;
+    action: [
+		(UIManager default confirm:'Are you shure you want to exit?' label:'Exit confirmation') 				ifTrue:[self close]
+		].
+  (aBuilder item: #'Best Game Score')
+    order: 2;
+    action: [
+				Transcript clear.
+				Transcript open.
+   				Transcript show: '    Best score: ', Best_score  printString; cr.
+				Transcript show: '    Best score time: ', Best_score_time   printString; cr.].
+  (aBuilder item: #'Current Status')
+    order: 3;
+    action: [TheGame ifNotNil: [
+				Transcript clear.
+			   Transcript open.
+   				Transcript show: '    Moves amounts: ', (TheGame moves) printString; cr.
+				Transcript show: '    Free cells amounts: ', (TheGame GetFreeCellsAmount) printString; cr.  ].
+			TheGame ifNil:[UIManager default inform: 'You need to start the game!!!!!!'.].].
+  (aBuilder item: #'Launch amounts')
+    order: 4;
+    action: [
+				Transcript clear.
+				Transcript open.
+   				Transcript show: '    Launch amounts: ', Launch_amounts  printString; cr.].
+			(aBuilder item: #'About')
+    order: 5;
+    action: [Transcript clear.
+				Transcript open.
+   				Transcript show: 'Мета гри - за мінімальну кількість клацань 
+по клітинках гри отримати максимальну 
+кількість голубих клітинок.'; cr.].
+	]
+! !
+
+!LOGame class methodsFor: 'initialize-release' stamp: 'Sophiyca 10/20/2022 13:28'!
+close
+
+Launch_amounts ifNotNil: [ Launch_amounts := Launch_amounts + 1. ].
+Launch_amounts ifNil: [ Launch_amounts := 1. ].
+
+Best_score  ifNotNil: [
+	 (Best_score < (TheGame GetNotFreeCellsAmount) 
+	ifTrue:[Best_score:= (TheGame GetNotFreeCellsAmount). 
+		Best_score_time:= (Date today + Time now)]) ].
+
+Best_score ifNil: [[Best_score:= (TheGame GetNotFreeCellsAmount). 
+		Best_score_time:= (Date today + Time now)]].
+
+TheGame delete.
+
+TheGame := nil.
+! !

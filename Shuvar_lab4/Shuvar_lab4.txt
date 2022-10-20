@@ -1,0 +1,203 @@
+ "--------------------------------------------------------------
+           СТВОРЕННЯ ІГРОВОЇ ПРОГРАМИ                  
+
+ Маємо на меті засвоїти такі уміння:  
+  *   додавати нові класи (пакети класів) 
+  *   наповнювати функціональність класів новими методами 
+  *   оголошувати і використовувати змінні класу   "
+
+" * ----
+1. Запустіть SystemBrowser і у стовпці пакетів класів (перший зліва) додайте 
+     новий пакет (за допомогою контекстного меню) - LightsOutGame 
+2. Використовуючи шаблон оголошення класу в панелі редагування, оголосіть 
+     новий клас LOCell: "
+
+SimpleSwitchMorph subclass: #LOCell
+instanceVariableNames: 'mouseAction'
+classVariableNames: ''
+poolDictionaries: ''
+category: 'LightsOutGame'
+
+    "збережіть виконані зміни"
+"Клас LOCell моделює одну клітинку ігрового поля, вміє рагувати на клацання мишею."
+
+"3. додайте новий метод екземпляра"
+
+initialize
+  super initialize.
+  self label: ''.
+  self borderWidth: 2.
+  bounds := 0@0 corner: 16@16.
+  offColor := Color paleYellow.
+  onColor := Color paleBlue darker.
+  self useSquareCorners.
+  self turnOff.
+
+   "збережіть виконані зміни" 
+
+" * ------------------
+   додайте ще методи "
+
+mouseAction: aBlock
+^ mouseAction := aBlock.
+
+mouseUp: anEvent
+mouseAction value.
+
+" 4. додайте ще один клас, який моделює ігрове поле та містить колекцію клвтинок" 
+
+BorderedMorph subclass: #LOGame
+instanceVariableNames: 'cells'
+classVariableNames: ''
+poolDictionaries: ''
+category: 'LightsOutGame'
+
+ " * ---------  і наповніть його методами (екземпляра)" 
+
+initialize
+ | sampleCell width height n |
+super initialize.
+n := self cellsPerSide.
+sampleCell := LOCell new.
+width := sampleCell width.
+height := sampleCell height.
+self bounds: (50@50 extent: ((width*n) @(height*n)) + (5 * self borderWidth)).
+cells := Array2D  new: n tabulate: [ :i :j | self newCellAt: i at: j ].
+
+cellsPerSide
+"The number of cells along each side of the game"
+^10
+
+newCellAt: i at: j
+"Create a cell for position (i,j) and add it to my on?screen
+representation at the appropriate screen position. Answer the new cell"
+| c origin |
+c := LOCell new.
+origin := self innerBounds origin.
+self addMorph: c.
+c position: ((i - 1) * c width) @ ((j - 1) * c height) + origin.
+c mouseAction: [self toggleNeighboursOfCellAt: i at: j].
+^c
+
+toggleNeighboursOfCellAt: i at: j
+(i > 1) ifTrue: [ (cells at: i - 1 at: j ) toggleState].
+(i < self cellsPerSide) ifTrue: [ (cells at: i + 1 at: j) toggleState].
+(j > 1) ifTrue: [ (cells at: i at: j - 1) toggleState].
+(j < self cellsPerSide) ifTrue: [ (cells at: i at: j + 1) toggleState].
+
+"Іграшка практично готова!  Випробуйте її в дії: запустіть її виконавши: "
+
+LOGame new openInWorld. a LOGame(412746496)
+
+" Мета гри - за мінімальну кількість клацань по клітинках гри отримати 
+   максимальну кількість голубих клітинок. "
+
+" Ігрове поле можна переміщати по екрану, захопивши мишею за правий або нижній синій край.
+ Щоб закрити гру, вкажіть мишею на синю рамку вікна гри, натисніть [Alt]+[Shift]+LeftClick
+ і закрийте форму хрестиком, що з'явився - одним з елементів меню-ореола.
+Будьте уважні: таким способом можна закрити довільний видимий на екрані елемент."
+
+" * -------------
+ Випробуваний вище спосіб доступу до гри не дуже зручний.  Організуємо його за допомогою команд головного меню.
+ Для цього потрібно додати ще один метод до класу LOGame.  На відміну від попередніх методів, це має бути 
+ МЕТОД КЛАСУ - не метод екземпляра."
+
+menuCommandOn: aBuilder
+  <worldMenu>
+(aBuilder item: #'LOGame')
+ order: 5;
+ with: [
+  (aBuilder item: #'Run Game')
+    order: 0;
+    action: [self open].
+ ].
+
+" додайте ще один метод класу: "
+open
+^ self new openInWorld
+
+" Збережіть зміни і випробуйте меню в дії. Які недоліки ви помітили?   "
+"Була б зручною ще можливість закривати закривати меню задопомогою меню"
+
+" ------ ЗМІННІ КЛАСУ
+
+ Щоб краще контролювати створену нами іграшку, додамо до LOGame змінну класу TheGame,
+  яка зберігатиме посилання на екземпляр гри. Додайте цю змінну за допомогою SystemBrowser, 
+  додайте (або змініть) також методи класу     "
+
+open
+ TheGame ifNil:
+ [TheGame:= self new.
+  TheGame openInWorld]
+
+close
+TheGame delete.
+TheGame := nil
+
+menuCommandOn: aBuilder
+  <worldMenu>
+(aBuilder item: #'LOGame')
+ order: 5;
+ with: [
+  (aBuilder item: #'Run Game')
+    order: 0;
+    action: [self open].
+  (aBuilder item: #'Exit Game')
+    order: 1;
+    action: [self close].].
+
+" Випробуйте тепер дію меню 
+
+------- ЗАПИТАННЯ:
+1. Як доповнити функціональність LOGame, щоб обчислювати кількість ходів, кількість відкритих клітинок? 
+		кількість ходів
+			- додала instanceVariableNames - moves
+			- у конструкторі initialize присвоїла moves значення 0 
+			  (таким чисном при запусу гри кількість ходів буде дорівнювати 0)
+			- створила метод moves що повертає кількість ходів
+			- у методі newCellAt: i at: j у випадку коли c mouseAction є істине інкрементую значення moves на один.
+		 кількість відкритих клітинок
+			- створила метод GetFreeCellsAmount, в якому за допомогою двох циклів проходжусь по всіх клітинках двовимірного масиву
+			  cells, і у випадку, якщо метод isOn для клітинки вертає False інкрементую попередньовведену і ініціалізовану нулем
+			  змінну freeCellsAmount на один. Метод повертає freeCellsAmount.
+		 кількість закритих клітинок
+			- створила метод GetNotFreeCellsAmount у яклму від загальної кількоті клітинок віднімаю значення, яке вертає метод GetFreeCellsAmount.
+			 
+2. Як доповнити функціональність LOGame, щоб контролювати кількість запусків гри?
+		 кількість запусків гри
+		   - створила змінну класу Launch_amounts.
+		   - у методі класу close перевіряю чи значення цієї змінної є nil.
+		   - у позитивному випадку: зміню значення змінної Launch_amounts на один.
+		   - у негативному випадку інкрементую значення змінної Launch_amounts на один 
+		     (так як їй уже було попередньо присвоєнечислова значення)
+		
+		 найкращий результат та час найкращого результату
+		   - створила ще дві змінних класу Best_score Best_score_time
+		 	- аналогічно, як у випадку з кількість запусків гри, у методі класу close перевіряю,
+			  чи значення змінної Best_score є nil
+			- у негативному випадку присвоюю змінній Best_score значення, що вертає метод 
+			  GetNotFreeCellsAmount для TheGame, а Best_score_time присвоюю значення конкатинації 
+			  поточної дати та поточного часу.
+			- у позитивному випадку перевіряю чи значення, що вертає метод GetNotFreeCellsAmount 
+			  для TheGame є більшим за поточне Best_score.
+			- у позитивному випадку роблю все те саме, що у пункті 3.
+			
+3. Запропонуйте власне розширення набору команд меню.
+			- до Exit Game додала запитання: 'Are you shure you want to exit?'
+			- додала 'Best Game Score': у будь який час можна перевірити яким був найкращий результат 
+			  коли небуть досягнений у даній грі
+			- додала 'Current Status': у випадку, якщо гра розпочата можна перевірити поточну кількість 
+			  вільних клітинок та кількість уже зроблених ходів. Якщо гра ще не рощпочата виводиться 
+			  відповідне повідомлення.
+			- додала 'Launch amounts': у будь який момент можна перевірити скільки разів дана гра уже запускалась.
+			- додала 'About': у будь який момент можна прочитати якою є головна мета гри.
+
+ ------ СТВОРЕННЯ, ЗБЕРЕЖЕННЯ, ІНСТАЛЮВАННЯ КЛАСУ
+
+{ Збережіть за допомогою браузера клас LOGame до файла.                 }
+{ Перегляньте вміст отриманого файла, переконайтеся, що все гаразд. }
+
+{ Тепер виконаємо трохи ризиковану вправу: за допомогою браузера спочатку }
+{ вилучіть клас LOGame з бібліотеки, а потім інсталюйте його з файла      }
+{ за допомогою WorldMenu\System\FileBrowser\...FileIn }"
+
